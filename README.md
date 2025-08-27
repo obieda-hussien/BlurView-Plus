@@ -1,5 +1,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 
+[![Build Status](https://github.com/obieda-hussien/BlurView-Plus/workflows/Build%20and%20Test%20BlurView-Plus/badge.svg)](https://github.com/obieda-hussien/BlurView-Plus/actions)
+
 # BlurView-Plus
 
 <a href="url"><img src="https://github.com/user-attachments/assets/5abb1034-021b-4dfb-ad1b-3136a2a00a02" width="432" ></a>
