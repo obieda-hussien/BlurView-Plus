@@ -46,6 +46,58 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp" />
 
+            <!-- Enhanced Features Controls -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Switch
+                    android:id="@+id/animationsSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="iPhone Animations"
+                    android:textSize="10sp"
+                    android:checked="true" />
+
+                <Switch
+                    android:id="@+id/dynamicColorsSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dynamic Colors"
+                    android:textSize="10sp"
+                    android:checked="false" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Switch
+                    android:id="@+id/performanceOptimizationSwitch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Performance Opt"
+                    android:textSize="10sp"
+                    android:checked="true" />
+
+                <TextView
+                    android:id="@+id/performanceStatsText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Performance: Good"
+                    android:textSize="8sp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </eightbitlab.com.blurview.BlurView>
 
