@@ -938,24 +938,14 @@ TextureView can be blurred only on API 31+. Everything else (which is SurfaceVie
 - 🛠️ Comprehensive debug tools
 - 📱 Multi-platform bridge support
 - 🔧 Memory management improvements
-
-### v14
 - 🌈 Multi-layer blur effects
 - 🎯 Environmental blur effects
 - ⚡ Intelligent caching system
 - 🎨 Advanced color extraction
-
-### v13
 - 🎭 iPhone-style smooth animations
 - 📊 Performance monitoring
-- 🎨 Material You integration
-- 🔧 Developer tools
-
-### v12
 - 🎨 Windows-style dynamic colors
-- ⚡ Performance optimizations
-- 🛠️ Enhanced API
-- 🐛 Bug fixes and stability
+- 🐛 Bug fixes and stability improvements
 
 ## 🔧 Rounded Corners
 
