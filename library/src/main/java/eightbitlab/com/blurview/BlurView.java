@@ -105,6 +105,8 @@ public class BlurView extends FrameLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         blurController.updateBlurViewSize();
+        // Force immediate blur update for size changes
+        forceBlurUpdate();
     }
 
     @Override
@@ -246,6 +248,8 @@ public class BlurView extends FrameLayout {
     public void setRotation(float rotation) {
         super.setRotation(rotation);
         notifyRotationChanged(rotation);
+        // Force immediate blur update for rotation changes
+        forceBlurUpdate();
     }
 
     @SuppressLint("NewApi")
@@ -255,6 +259,14 @@ public class BlurView extends FrameLayout {
         }
     }
 
+    @Override
+    public void setScaleX(float scaleX) {
+        super.setScaleX(scaleX);
+        notifyScaleXChanged(scaleX);
+        // Force immediate blur update for scale changes
+        forceBlurUpdate();
+    }
+
     @SuppressLint("NewApi")
     public void notifyScaleXChanged(float scaleX) {
         if (usingRenderNode()) {
@@ -262,10 +274,27 @@ public class BlurView extends FrameLayout {
         }
     }
 
+    @Override
+    public void setScaleY(float scaleY) {
+        super.setScaleY(scaleY);
+        notifyScaleYChanged(scaleY);
+        // Force immediate blur update for scale changes
+        forceBlurUpdate();
+    }
+
     @SuppressLint("NewApi")
     public void notifyScaleYChanged(float scaleY) {
         if (usingRenderNode()) {
             ((RenderNodeBlurController) blurController).updateScaleY(scaleY);
+        }
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        // Force immediate blur update when becoming visible
+        if (visibility == VISIBLE) {
+            forceBlurUpdate();
         }
     }
 
@@ -374,6 +403,40 @@ public class BlurView extends FrameLayout {
     }
     
     /**
+     * Automatically extracts and applies dynamic colors from the current blur content.
+     * This method captures the current view content and extracts colors from it.
+     * 
+     * @return this BlurView for method chaining
+     */
+    public BlurView applyDynamicColorsAuto() {
+        if (colorExtractor != null && blurController instanceof PreDrawBlurController) {
+            try {
+                // Try to get the internal bitmap from the blur controller
+                PreDrawBlurController controller = (PreDrawBlurController) blurController;
+                Bitmap internalBitmap = controller.getInternalBitmap();
+                
+                if (internalBitmap != null && !internalBitmap.isRecycled()) {
+                    int adaptiveColor = colorExtractor.extractAdaptiveColor(internalBitmap, overlayColor);
+                    setOverlayColor(adaptiveColor);
+                } else if (getWidth() > 0 && getHeight() > 0) {
+                    // Fallback: capture our own bitmap
+                    Bitmap captureBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas captureCanvas = new Canvas(captureBitmap);
+                    draw(captureCanvas);
+                    
+                    int adaptiveColor = colorExtractor.extractAdaptiveColor(captureBitmap, overlayColor);
+                    setOverlayColor(adaptiveColor);
+                    
+                    captureBitmap.recycle();
+                }
+            } catch (Exception e) {
+                // Fallback silently if automatic color extraction fails
+            }
+        }
+        return this;
+    }
+    
+    /**
      * Gets performance statistics for this BlurView.
      * 
      * @return performance statistics, or null if performance optimization is disabled
@@ -402,5 +465,78 @@ public class BlurView extends FrameLayout {
      */
     public boolean isPerformanceOptimizationEnabled() {
         return performanceOptimizationEnabled;
+    }
+    
+    /**
+     * Forces an immediate blur update. This can be used to refresh the blur
+     * when the underlying content changes (e.g., during ripple animations).
+     * 
+     * @return this BlurView for method chaining
+     */
+    public BlurView forceBlurUpdate() {
+        if (blurController != null && isViewAttachedToWindow()) {
+            // Invalidate to trigger a redraw
+            invalidate();
+            // Force immediate update for PreDrawBlurController
+            if (blurController instanceof PreDrawBlurController) {
+                ((PreDrawBlurController) blurController).updateBlur();
+            }
+            // Apply dynamic colors if enabled
+            if (dynamicColorsEnabled && colorExtractor != null) {
+                postDelayed(this::applyDynamicColorsAuto, 10); // Small delay to let blur update first
+            }
+        }
+        return this;
+    }
+    
+    /**
+     * Forces an immediate blur refresh with a short delay. Useful for cases
+     * where the underlying content is still changing (e.g., during animations).
+     * 
+     * @param delayMs delay in milliseconds before forcing the update
+     * @return this BlurView for method chaining
+     */
+    public BlurView forceBlurUpdateDelayed(long delayMs) {
+        if (isViewAttachedToWindow()) {
+            postDelayed(this::forceBlurUpdate, delayMs);
+        }
+        return this;
+    }
+    
+    /**
+     * Sets up automatic blur refresh for ripple effects and animations.
+     * This will periodically refresh the blur during active animations.
+     * 
+     * @param enabled true to enable automatic refresh during animations
+     * @return this BlurView for method chaining
+     */
+    public BlurView setAutoRefreshDuringAnimations(boolean enabled) {
+        if (enabled) {
+            // Refresh every 16ms (60fps) while animations might be running
+            Runnable refreshRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (isViewAttachedToWindow() && getVisibility() == VISIBLE) {
+                        forceBlurUpdate();
+                        // Continue refreshing if animations are likely still running
+                        postDelayed(this, 16);
+                    }
+                }
+            };
+            post(refreshRunnable);
+        }
+        return this;
+    }
+    
+    /**
+     * Compatibility method for checking if view is attached to window.
+     * Works on all API levels.
+     */
+    private boolean isViewAttachedToWindow() {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
+            return isAttachedToWindow();
+        } else {
+            return getWindowToken() != null;
+        }
     }
 }
