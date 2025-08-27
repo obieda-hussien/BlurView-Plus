@@ -141,21 +141,16 @@ public class BlurAnimator {
     
     /**
      * Gets the current blur radius from the BlurView.
-     * This is a simplified implementation - in a real scenario, 
-     * BlurViewFacade would need a getter method.
      */
     private float getCurrentBlurRadius() {
-        // Default implementation - would need to be enhanced in BlurViewFacade
-        return BlurController.DEFAULT_BLUR_RADIUS;
+        return blurView.getBlurRadius();
     }
     
     /**
      * Gets the current overlay color from the BlurView.
-     * Simplified implementation for animation purposes.
      */
     private int getCurrentOverlayColor() {
-        // Default implementation - would need to be enhanced in BlurViewFacade
-        return 0x40000000; // Semi-transparent black default
+        return blurView.getOverlayColor();
     }
     
     /**

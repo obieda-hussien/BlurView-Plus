@@ -249,6 +249,21 @@ public final class PreDrawBlurController implements BlurController {
         }
         return this;
     }
+
+    @Override
+    public float getBlurRadius() {
+        return blurRadius;
+    }
+
+    @Override
+    public int getOverlayColor() {
+        return overlayColor;
+    }
+
+    @Override
+    public boolean isBlurEnabled() {
+        return blurEnabled;
+    }
     
     /**
      * Gets the current internal bitmap for color extraction purposes.

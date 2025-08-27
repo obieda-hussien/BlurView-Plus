@@ -45,4 +45,26 @@ public interface BlurViewFacade {
      * @return {@link BlurViewFacade}
      */
     BlurViewFacade setOverlayColor(@ColorInt int overlayColor);
+
+    /**
+     * Gets the current blur radius
+     *
+     * @return current blur radius
+     */
+    float getBlurRadius();
+
+    /**
+     * Gets the current overlay color
+     *
+     * @return current overlay color
+     */
+    @ColorInt
+    int getOverlayColor();
+
+    /**
+     * Checks if blur is currently enabled
+     *
+     * @return true if blur is enabled, false otherwise
+     */
+    boolean isBlurEnabled();
 }
