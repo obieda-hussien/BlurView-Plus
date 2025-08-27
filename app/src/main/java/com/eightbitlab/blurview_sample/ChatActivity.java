@@ -1,9 +1,7 @@
 package com.eightbitlab.blurview_sample;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -15,10 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import eightbitlab.com.blurview.BlurTarget;
-import eightbitlab.com.blurview.BlurView;
-import eightbitlab.com.blurview.BlurViewFacade;
-import eightbitlab.com.blurview.RenderScriptBlur;
+
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -26,9 +21,6 @@ public class ChatActivity extends AppCompatActivity {
     private EditText messageEditText;
     private ImageView sendButton;
     private ImageView backButton;
-    private BlurView chatBlurView;
-    private BlurTarget chatTarget;
-    private BlurViewFacade blurViewFacade;
     private ChatAdapter chatAdapter;
     private List<ChatMessage> messages;
 
@@ -38,7 +30,6 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         initViews();
-        setupBlurView();
         setupRecyclerView();
         setupClickListeners();
         loadSampleMessages();
@@ -49,19 +40,9 @@ public class ChatActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.edittext1);
         sendButton = findViewById(R.id.imageview4);
         backButton = findViewById(R.id.imageview1);
-        chatBlurView = findViewById(R.id.chatBlurView);
-        chatTarget = findViewById(R.id.chatTarget);
     }
 
-    private void setupBlurView() {
-        View decorView = getWindow().getDecorView();
-        Drawable windowBackground = decorView.getBackground();
-        
-        blurViewFacade = chatBlurView.setupWith(chatTarget, new RenderScriptBlur(this), 4f, false)
-                .setFrameClearDrawable(windowBackground)
-                .setBlurRadius(15f)
-                .setBlurAutoUpdate(true);
-    }
+
 
     private void setupRecyclerView() {
         messages = new ArrayList<>();
@@ -81,9 +62,6 @@ public class ChatActivity extends AppCompatActivity {
         ImageView attachmentButton = findViewById(R.id.imageview5);
         attachmentButton.setOnClickListener(v -> {
             Toast.makeText(this, "مميزات BlurView: تأثيرات ضبابية متقدمة!", Toast.LENGTH_SHORT).show();
-            
-            // Demonstrate BlurView features
-            animateBlurRadius();
         });
     }
 
@@ -126,16 +104,7 @@ public class ChatActivity extends AppCompatActivity {
         chatAdapter.notifyDataSetChanged();
     }
 
-    private void animateBlurRadius() {
-        // Demonstrate dynamic blur radius animation using the facade
-        float currentRadius = blurViewFacade.getBlurRadius();
-        float targetRadius = currentRadius == 15f ? 25f : 15f;
-        
-        // Simple blur animation
-        blurViewFacade.setBlurRadius(targetRadius);
-        
-        Toast.makeText(this, "تم تغيير شدة الضبابية إلى " + targetRadius, Toast.LENGTH_SHORT).show();
-    }
+
 
     @Override
     public void onBackPressed() {

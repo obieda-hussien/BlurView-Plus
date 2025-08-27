@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	android:background="#F5F7FA">
 	
-	<eightbitlab.com.blurview.BlurTarget
+	<FrameLayout
 		android:id="@+id/chatTarget"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
@@ -206,14 +206,6 @@
 				android:orientation="horizontal" />
 		</LinearLayout>
 		
-	</eightbitlab.com.blurview.BlurTarget>
-	
-	<!-- Chat Blur View overlay for top bar -->
-	<eightbitlab.com.blurview.BlurView
-		android:id="@+id/chatBlurView"
-		android:layout_width="match_parent"
-		android:layout_height="56dp"
-		android:layout_gravity="top"
-		app:blurOverlayColor="@color/colorOverlay" />
+	</FrameLayout>
 		
 </FrameLayout>
