@@ -1,6 +1,7 @@
 package com.eightbitlab.blurview_sample;
 
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private Button captureSnapshotButton;
     private Button stressTestButton;
     private FloatingActionButton demoModeFab;
+    private FloatingActionButton chatFab;
     
     // Feature state
     private boolean isExpanded = false;
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         captureSnapshotButton = findViewById(R.id.captureSnapshotButton);
         stressTestButton = findViewById(R.id.stressTestButton);
         demoModeFab = findViewById(R.id.demoModeFab);
+        chatFab = findViewById(R.id.chatFab);
         
         // Setup spinners
         setupSpinners();
@@ -576,6 +579,7 @@ public class MainActivity extends AppCompatActivity {
         captureSnapshotButton.setOnClickListener(v -> captureBlurSnapshot());
         stressTestButton.setOnClickListener(v -> toggleStressTest());
         demoModeFab.setOnClickListener(v -> toggleDemoMode());
+        chatFab.setOnClickListener(v -> openChatActivity());
     }
     
     private void setupBlurViewStyles() {
@@ -1129,5 +1133,10 @@ public class MainActivity extends AppCompatActivity {
         if (stressTestRunnable != null) {
             animationHandler.removeCallbacks(stressTestRunnable);
         }
+    }
+    
+    private void openChatActivity() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 }
