@@ -113,7 +113,7 @@ public final class PreDrawBlurController implements BlurController {
     }
 
     @SuppressWarnings("WeakerAccess")
-    void updateBlur() {
+    public void updateBlur() {
         if (!blurEnabled || !initialized) {
             return;
         }
@@ -248,5 +248,14 @@ public final class PreDrawBlurController implements BlurController {
             blurView.invalidate();
         }
         return this;
+    }
+    
+    /**
+     * Gets the current internal bitmap for color extraction purposes.
+     * @return the internal bitmap, or null if not available
+     */
+    @Nullable
+    public Bitmap getInternalBitmap() {
+        return initialized ? internalBitmap : null;
     }
 }

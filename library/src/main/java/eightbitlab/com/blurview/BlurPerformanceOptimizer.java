@@ -84,7 +84,7 @@ public class BlurPerformanceOptimizer {
     @NonNull
     public String generateCacheKey(int width, int height, float blurRadius, 
                                   int overlayColor, float scaleFactor) {
-        return String.format("%dx%d_r%.1f_c%08x_s%.2f", 
+        return String.format(java.util.Locale.ROOT, "%dx%d_r%.1f_c%08x_s%.2f", 
                            width, height, blurRadius, overlayColor, scaleFactor);
     }
     

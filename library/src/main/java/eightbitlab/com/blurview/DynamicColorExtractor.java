@@ -31,7 +31,7 @@ public class DynamicColorExtractor {
      */
     @ColorInt
     public int extractAdaptiveColor(@NonNull Bitmap bitmap, @ColorInt int defaultColor) {
-        if (bitmap.isRecycled() || bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
+        if (bitmap == null || bitmap.isRecycled() || bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
             return defaultColor;
         }
         
