@@ -228,13 +228,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         
-        // Opacity SeekBar (0 to 255)
-        opacitySeekBar.setProgress(128); // 50% opacity
+        // Opacity SeekBar (0 to 100, representing 0% to 100% opacity)
+        opacitySeekBar.setProgress(50); // 50% opacity to match reset default
         opacitySeekBar.setOnSeekBarChangeListener(new SeekBarListenerAdapter() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int alpha = (int) (progress * 2.55f); // 0-100 to 0-255
                 applyOpacityToAllBlurViews(alpha);
+                updateDebugInfo();
             }
         });
     }
@@ -305,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 blurView.setAnimationsEnabled(isChecked);
             }
             showFeatureToast("iPhone-style Animations", isChecked);
+            updateDebugInfo();
         });
         
         dynamicColorsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -317,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             showFeatureToast("Windows-style Dynamic Colors", isChecked);
+            updateDebugInfo();
         });
         
         performanceOptimizationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -330,12 +333,18 @@ public class MainActivity extends AppCompatActivity {
                 startPerformanceMonitoring();
             } else {
                 performanceStatsText.setText("Performance monitoring disabled");
+                // Also disable related sub-features when main performance optimization is disabled
+                realTimeMonitoringCheckbox.setChecked(false);
+                adaptiveQualityCheckbox.setChecked(false);
+                stopRealTimeMonitoring();
             }
+            updateDebugInfo();
         });
         
         autoRefreshSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Simulate auto-refresh functionality
             showFeatureToast("Auto-refresh During Animations", isChecked);
+            updateDebugInfo();
         });
         
         debugOverlaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -366,6 +375,15 @@ public class MainActivity extends AppCompatActivity {
             // Simulate environmental effects by adding subtle color variations
             if (isChecked) {
                 simulateEnvironmentalEffects();
+            } else {
+                // Reset overlay colors when disabled
+                BlurView[] allBlurViews = {topBlurView, bottomBlurView, leftSideBlurView, rightSideBlurView, centerOverlayBlurView};
+                for (BlurView blurView : allBlurViews) {
+                    if (blurView.getVisibility() == View.VISIBLE) {
+                        blurView.setOverlayColor(Color.TRANSPARENT);
+                    }
+                }
+                updateDebugInfo();
             }
             showFeatureToast("Environmental Effects", isChecked);
         });
@@ -374,6 +392,15 @@ public class MainActivity extends AppCompatActivity {
             // Simulate Material You integration
             if (isChecked) {
                 applyMaterialYouTheming();
+            } else {
+                // Reset overlay colors when disabled
+                BlurView[] allBlurViews = {topBlurView, bottomBlurView, leftSideBlurView, rightSideBlurView, centerOverlayBlurView};
+                for (BlurView blurView : allBlurViews) {
+                    if (blurView.getVisibility() == View.VISIBLE) {
+                        blurView.setOverlayColor(Color.TRANSPARENT);
+                    }
+                }
+                updateDebugInfo();
             }
             showFeatureToast("Material You Integration", isChecked);
         });
@@ -386,12 +413,14 @@ public class MainActivity extends AppCompatActivity {
                 stopRealTimeMonitoring();
             }
             showFeatureToast("Real-time Performance Monitoring", isChecked);
+            updateDebugInfo();
         });
         
         intelligentCachingCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Simulate intelligent caching toggle
             showFeatureToast("Intelligent Caching", isChecked);
             updateCacheStats();
+            updateDebugInfo();
         });
         
         adaptiveQualityCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -400,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
                 enableAdaptiveQuality();
             }
             showFeatureToast("Adaptive Quality Scaling", isChecked);
+            updateDebugInfo();
         });
         
         // Start with performance monitoring enabled
@@ -634,8 +664,79 @@ public class MainActivity extends AppCompatActivity {
         rightSideBlurView.setVisibility(View.GONE);
         centerOverlayBlurView.setVisibility(View.GONE);
         
+        // Actually apply the reset settings to BlurViews
+        applyConfigurationSettings();
+        
         showFeatureToast("Configuration Reset", true);
         updateDebugInfo();
+    }
+    
+    /**
+     * Applies all current UI configuration settings to the BlurViews.
+     * This ensures synchronization between UI controls and actual blur state.
+     */
+    private void applyConfigurationSettings() {
+        BlurView[] allBlurViews = {topBlurView, bottomBlurView, leftSideBlurView, rightSideBlurView, centerOverlayBlurView};
+        
+        // Apply animations setting
+        boolean animationsEnabled = animationsSwitch.isChecked();
+        for (BlurView blurView : allBlurViews) {
+            blurView.setAnimationsEnabled(animationsEnabled);
+        }
+        
+        // Apply dynamic colors setting
+        boolean dynamicColorsEnabled = dynamicColorsSwitch.isChecked();
+        for (BlurView blurView : allBlurViews) {
+            blurView.setDynamicColorsEnabled(dynamicColorsEnabled);
+            if (dynamicColorsEnabled) {
+                blurView.applyDynamicColors(null);
+            } else {
+                // Reset to default overlay color
+                blurView.setOverlayColor(Color.TRANSPARENT);
+            }
+        }
+        
+        // Apply performance optimization setting
+        boolean performanceOptEnabled = performanceOptimizationSwitch.isChecked();
+        for (BlurView blurView : allBlurViews) {
+            blurView.setPerformanceOptimizationEnabled(performanceOptEnabled);
+        }
+        
+        // Apply blur radius from seekbar
+        float blurRadius = radiusSeekBar.getProgress() / 4f;
+        applyRadiusToAllBlurViews(blurRadius, false);
+        
+        // Apply quality from seekbar
+        float quality = 0.5f + (qualitySeekBar.getProgress() / 100f) * 1.5f;
+        applyQualityToAllBlurViews(quality);
+        
+        // Apply opacity from seekbar (fixed calculation)
+        int alpha = (int) (opacitySeekBar.getProgress() * 2.55f);
+        applyOpacityToAllBlurViews(alpha);
+        
+        // Handle debug overlay visibility
+        if (debugOverlaySwitch.isChecked()) {
+            debugInfoText.setVisibility(View.VISIBLE);
+        } else {
+            debugInfoText.setVisibility(View.GONE);
+        }
+        
+        // Start/stop monitoring based on checkboxes
+        if (realTimeMonitoringCheckbox.isChecked()) {
+            startRealTimeMonitoring();
+        } else {
+            stopRealTimeMonitoring();
+        }
+        
+        // Update cache stats
+        updateCacheStats();
+        
+        // Handle performance monitoring
+        if (performanceOptEnabled) {
+            startPerformanceMonitoring();
+        } else {
+            performanceStatsText.setText("Performance monitoring disabled");
+        }
     }
     
     private void exportCurrentConfiguration() {
@@ -919,6 +1020,12 @@ public class MainActivity extends AppCompatActivity {
         // Simulate environmental effects by applying subtle color variations
         animationHandler.postDelayed(() -> {
             if (environmentalEffectsSwitch.isChecked()) {
+                // Check if Material You is also enabled to avoid conflicts
+                if (materialYouIntegrationSwitch.isChecked()) {
+                    showFeatureToast("Material You integration takes precedence", false);
+                    return;
+                }
+                
                 // Apply subtle color variations to simulate environmental changes
                 int[] environmentColors = {
                     Color.argb(50, 255, 200, 150), // Warm sunlight
@@ -933,6 +1040,7 @@ public class MainActivity extends AppCompatActivity {
                         allBlurViews[i].setOverlayColor(environmentColors[i % environmentColors.length]);
                     }
                 }
+                updateDebugInfo();
             }
         }, 500);
     }
@@ -941,6 +1049,12 @@ public class MainActivity extends AppCompatActivity {
         // Simulate Material You dynamic theming
         animationHandler.postDelayed(() -> {
             if (materialYouIntegrationSwitch.isChecked()) {
+                // Disable environmental effects if they're conflicting
+                if (environmentalEffectsSwitch.isChecked()) {
+                    environmentalEffectsSwitch.setChecked(false);
+                    showFeatureToast("Environmental effects disabled for Material You", false);
+                }
+                
                 // Apply Material You inspired colors
                 int materialYouColor = Color.argb(100, 103, 80, 164); // Material You purple
                 
@@ -950,6 +1064,7 @@ public class MainActivity extends AppCompatActivity {
                         blurView.setOverlayColor(materialYouColor);
                     }
                 }
+                updateDebugInfo();
             }
         }, 300);
     }
@@ -990,8 +1105,15 @@ public class MainActivity extends AppCompatActivity {
             if (adaptiveQualityCheckbox.isChecked()) {
                 float targetQuality = currentFPS > 45f ? 1.0f : 0.7f; // Reduce quality if FPS drops
                 int qualityProgress = (int)((targetQuality - 0.5f) / 1.5f * 100f);
-                qualitySeekBar.setProgress(qualityProgress);
-                applyQualityToAllBlurViews(targetQuality);
+                
+                // Only update if significantly different to avoid fighting with user input
+                int currentProgress = qualitySeekBar.getProgress();
+                if (Math.abs(qualityProgress - currentProgress) > 10) {
+                    qualitySeekBar.setProgress(qualityProgress);
+                    applyQualityToAllBlurViews(targetQuality);
+                    showFeatureToast("Quality auto-adjusted based on performance", true);
+                    updateDebugInfo();
+                }
             }
         }, 200);
     }
