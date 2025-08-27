@@ -241,6 +241,21 @@ public class RenderNodeBlurController implements BlurController {
         return this;
     }
 
+    @Override
+    public float getBlurRadius() {
+        return blurRadius;
+    }
+
+    @Override
+    public int getOverlayColor() {
+        return overlayColor;
+    }
+
+    @Override
+    public boolean isBlurEnabled() {
+        return enabled;
+    }
+
     void updateRotation(float rotation) {
         blurNode.setRotationZ(-rotation);
     }

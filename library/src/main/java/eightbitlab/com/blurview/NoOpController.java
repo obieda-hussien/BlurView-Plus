@@ -44,4 +44,19 @@ public class NoOpController implements BlurController {
     public BlurViewFacade setBlurAutoUpdate(boolean enabled) {
         return this;
     }
+
+    @Override
+    public float getBlurRadius() {
+        return BlurController.DEFAULT_BLUR_RADIUS;
+    }
+
+    @Override
+    public int getOverlayColor() {
+        return 0;
+    }
+
+    @Override
+    public boolean isBlurEnabled() {
+        return false;
+    }
 }

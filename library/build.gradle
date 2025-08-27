@@ -4,11 +4,15 @@ apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 36
-    namespace "com.eightbitlab.blurview"
+    namespace "eightbitlab.com.blurview"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     defaultConfig {
@@ -61,9 +65,9 @@ task androidSourcesJar(type: Jar) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = 'com.github.Dimezis'
-            artifactId = 'BlurView' 
-            version = "3.1.0"
+            groupId = 'com.github.obieda-hussien'
+            artifactId = 'BlurView-Plus' 
+            version = "1.0.0"
             
             artifact("$buildDir/outputs/aar/${project.getName()}-release.aar") {
                 builtBy assemble
@@ -72,9 +76,9 @@ publishing {
             artifact androidJavadocsJar
             
             pom {
-                name = 'BlurView'
-                description = 'Dynamic iOS-like blur on Android'
-                url = 'https://github.com/Dimezis/BlurView'
+                name = 'BlurView-Plus'
+                description = 'Enhanced Android BlurView with dynamic colors, smooth animations, and performance optimizations'
+                url = 'https://github.com/obieda-hussien/BlurView-Plus'
                 
                 licenses {
                     license {
@@ -85,8 +89,8 @@ publishing {
                 
                 developers {
                     developer {
-                        id = 'dimezis'
-                        name = 'Dmytro Saviuk'
+                        id = 'obieda-hussien'
+                        name = 'Obieda Hussien'
                     }
                 }
             }

@@ -16,7 +16,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.eightbitlab.blurview.R;
+import eightbitlab.com.blurview.R;
 
 /**
  * FrameLayout that blurs its underlying content.
@@ -364,7 +364,7 @@ public class BlurView extends FrameLayout {
      */
     public BlurView animateBlurRadius(float targetRadius) {
         if (blurAnimator != null) {
-            float currentRadius = BlurController.DEFAULT_BLUR_RADIUS; // Would need getter in real implementation
+            float currentRadius = blurController.getBlurRadius();
             blurAnimator.animateBlurRadius(currentRadius, targetRadius);
         } else {
             setBlurRadius(targetRadius);
