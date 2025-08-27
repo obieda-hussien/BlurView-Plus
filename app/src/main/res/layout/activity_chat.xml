@@ -38,7 +38,7 @@
 					android:src="@drawable/icons_86"
 					android:scaleType="fitCenter"
 					android:rotation="180"
-					android:tint="#111111" />
+					app:tint="#111111" />
 				
 				<LinearLayout
 					android:id="@+id/linear2"
@@ -99,7 +99,7 @@
 					android:padding="11dp"
 					android:src="@drawable/iconss_8"
 					android:scaleType="fitCenter"
-					android:tint="#111111" />
+					app:tint="#111111" />
 			</LinearLayout>
 			
 			<LinearLayout
@@ -150,7 +150,7 @@
 								android:padding="3dp"
 								android:src="@drawable/icon_add_round"
 								android:scaleType="fitCenter"
-								android:tint="#111111" />
+								app:tint="#111111" />
 						</LinearLayout>
 						
 						<LinearLayout
@@ -191,7 +191,7 @@
 								android:padding="4dp"
 								android:src="@drawable/icon_arrow_upward_round"
 								android:scaleType="fitCenter"
-								android:tint="#111111" />
+								app:tint="#111111" />
 						</LinearLayout>
 					</LinearLayout>
 				</com.google.android.material.card.MaterialCardView>
