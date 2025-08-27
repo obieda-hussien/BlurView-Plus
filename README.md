@@ -1,5 +1,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 
+[![Build Status](https://github.com/obieda-hussien/BlurView-Plus/workflows/Build%20and%20Test%20BlurView-Plus/badge.svg)](https://github.com/obieda-hussien/BlurView-Plus/actions)
+
 # BlurView-Plus
 
 <a href="url"><img src="https://github.com/user-attachments/assets/5abb1034-021b-4dfb-ad1b-3136a2a00a02" width="432" ></a>
@@ -170,6 +172,77 @@ On API 31+ the blur is done on the system Render Thread.
 Other libs:
 - 🛑 [BlurKit](https://github.com/CameraKit/blurkit-android) - constantly invalidates itself
 - 🛑 [RealtimeBlurView](https://github.com/mmin18/RealtimeBlurView) - constantly invalidates itself
+
+## 🚀 Automated Building & CI/CD
+
+This project includes a comprehensive GitHub Actions workflow that automatically builds and tests the library and sample application. The workflow is triggered on:
+
+- **Push to master branch**: Full build, test, and automatic release creation
+- **Pull requests**: Build and test validation  
+- **Manual workflow dispatch**: On-demand builds
+
+### 📦 Artifacts Generated
+
+The CI automatically generates and uploads the following build artifacts:
+
+1. **Library AAR** (`library-aar`): 
+   - Release version of the BlurView-Plus library
+   - Ready for integration into other Android projects
+
+2. **Debug APK** (`app-debug-apk`):
+   - Debug version of the sample application
+   - Includes debugging symbols and is immediately installable
+
+3. **Release APK** (`app-release-apk`):
+   - Optimized release version of the sample application
+   - Unsigned APK ready for signing and distribution
+
+### 🔧 Workflow Features
+
+- **Code Quality**: Automated linting and static analysis
+- **Testing**: Unit tests with comprehensive reporting
+- **Multi-step Build**: Library + sample app compilation
+- **Performance Testing**: Automated benchmarks (if available)
+- **Artifact Management**: Organized upload of all build outputs
+- **Auto-Release**: Automatic GitHub releases on master branch pushes
+
+### 📥 Download Build Artifacts
+
+After any successful build, you can download the generated APKs and library files from:
+1. Go to the **Actions** tab in the GitHub repository
+2. Click on the latest successful workflow run
+3. Scroll down to the **Artifacts** section
+4. Download the desired artifacts (APKs or AAR files)
+
+### 🛠️ Local Building
+
+To build locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/obieda-hussien/BlurView-Plus.git
+cd BlurView-Plus
+
+# Make gradlew executable
+chmod +x gradlew
+
+# Build debug APK
+./gradlew app:assembleDebug
+
+# Build release APK
+./gradlew app:assembleRelease
+
+# Build library AAR
+./gradlew library:assembleRelease
+
+# Run tests
+./gradlew test
+
+# Run lint checks
+./gradlew lint
+```
+
+APKs will be generated in `app/build/outputs/apk/` and AAR files in `library/build/outputs/aar/`.
 
 License
 -------

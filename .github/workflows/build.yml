@@ -2,9 +2,9 @@ name: Build and Test BlurView-Plus
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -78,13 +78,9 @@ jobs:
           app/build/reports/tests/
 
   build:
-    name: Build Library
+    name: Build Library and APKs
     runs-on: ubuntu-latest
     needs: [lint, test]
-    
-    strategy:
-      matrix:
-        api-level: [21, 28, 31, 34]
         
     steps:
     - name: Checkout code
@@ -109,34 +105,45 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-    - name: Build library
+    - name: Build library AAR
       run: ./gradlew library:assembleRelease
       
-    - name: Build example app
+    - name: Build debug APK
       run: ./gradlew app:assembleDebug
       
-    - name: Upload build artifacts
+    - name: Build release APK
+      run: ./gradlew app:assembleRelease
+      
+    - name: Display build artifacts info
+      run: |
+        echo "📦 Build Artifacts Generated:"
+        echo "================================"
+        echo "🔧 Library AAR files:"
+        find library/build/outputs/aar -name "*.aar" -exec ls -lh {} \;
+        echo ""
+        echo "📱 APK files:"  
+        find app/build/outputs/apk -name "*.apk" -exec ls -lh {} \;
+        echo ""
+        echo "✅ All artifacts built successfully!"
+      
+    - name: Upload library AAR
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts-api-${{ matrix.api-level }}
-        path: |
-          library/build/outputs/aar/
-          app/build/outputs/apk/
-
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Run security scan
-      uses: securecodewarrior/github-action-add-sarif@v1
+        name: library-aar
+        path: library/build/outputs/aar/*.aar
+        
+    - name: Upload debug APK
+      uses: actions/upload-artifact@v4
       with:
-        sarif-file: 'security-scan-results.sarif'
-      continue-on-error: true
+        name: app-debug-apk
+        path: app/build/outputs/apk/debug/*.apk
+        
+    - name: Upload release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-apk
+        path: app/build/outputs/apk/release/*.apk
+
 
   performance-test:
     name: Performance Benchmarks
@@ -181,7 +188,7 @@ jobs:
     name: Publish Release
     runs-on: ubuntu-latest
     needs: [build, test]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     
     steps:
     - name: Checkout code
