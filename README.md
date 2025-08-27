@@ -1,10 +1,16 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 
-# BlurView
+# BlurView-Plus
 
 <a href="url"><img src="https://github.com/user-attachments/assets/5abb1034-021b-4dfb-ad1b-3136a2a00a02" width="432" ></a>
 
-Dynamic iOS-like blur for Android Views. Includes a library and a small example project.
+Dynamic iOS-like blur for Android Views with advanced Windows-style dynamic colors, smooth animations, and performance optimizations. 
+
+BlurView-Plus includes a comprehensive library and example project with cutting-edge features:
+- 🎨 **Windows-style Dynamic Colors**: Automatically adapts overlay colors based on content
+- 🎭 **iPhone-style Smooth Animations**: Physics-based blur transitions and natural motion
+- ⚡ **Advanced Performance Optimizations**: Intelligent caching and adaptive quality scaling
+- 🔧 **Enhanced Developer Tools**: Performance monitoring and debugging capabilities
 
 BlurView can be used as a regular FrameLayout. It blurs its underlying content and draws it as a
 background for its children. The children of the BlurView are not blurred. BlurView updates its
@@ -56,11 +62,64 @@ The BlurTarget may contain other BlurTargets and BlurViews though.<br/>
     // gets a low alpha value after blur is applied.
     Drawable windowBackground = decorView.getBackground();
 
-    // Optionally pass a custom BlurAlgorithm and scale factor as additional parameters.
-    // You might want to set a smaller scale factor on API 31+ to have a more precise blur with less flickering.
+    // Basic setup with enhanced features
     blurView.setupWith(target) 
-           .setFrameClearDrawable(windowBackground) // Optional. Useful when your root has a lot of transparent background, which results in semi-transparent blurred content. This will make the background opaque
+           .setFrameClearDrawable(windowBackground) // Optional
            .setBlurRadius(radius)
+           // Enable new features
+           .setDynamicColorsEnabled(true)     // Windows-style adaptive colors
+           .setAnimationsEnabled(true)        // iPhone-style smooth animations
+           .setPerformanceOptimizationEnabled(true); // Advanced optimizations
+```
+
+## 🆕 Enhanced Features
+
+### Dynamic Background Colors (Windows-style)
+Automatically extracts and adapts overlay colors based on the underlying content, similar to Windows Acrylic effects:
+
+```Java
+blurView.setDynamicColorsEnabled(true);
+
+// Manually trigger color extraction from a specific bitmap
+blurView.applyDynamicColors(someBitmap);
+```
+
+### Smooth Animations (iPhone-style)  
+Physics-based blur transitions with natural spring motion:
+
+```Java
+blurView.setAnimationsEnabled(true);
+
+// Animate blur radius with smooth transitions
+blurView.animateBlurRadius(25f);
+
+// Animate blur enable/disable with fade effects
+blurView.animateBlurEnabled(false);
+```
+
+### Advanced Performance Optimizations
+Intelligent caching, adaptive quality scaling, and performance monitoring:
+
+```Java
+blurView.setPerformanceOptimizationEnabled(true);
+
+// Get performance statistics
+BlurPerformanceOptimizer.PerformanceStats stats = blurView.getPerformanceStats();
+if (stats != null) {
+    Log.d("BlurView", "Average frame time: " + stats.averageFrameTime + "ms");
+    Log.d("BlurView", "Cache hit rate: " + stats.getCacheHitRate() * 100 + "%");
+    Log.d("BlurView", "Current quality scale: " + stats.currentQualityScale);
+}
+```
+
+### Feature Configuration
+All enhanced features can be enabled/disabled individually:
+
+```Java
+blurView
+    .setDynamicColorsEnabled(true)        // Enable/disable dynamic colors
+    .setAnimationsEnabled(true)           // Enable/disable smooth animations  
+    .setPerformanceOptimizationEnabled(true); // Enable/disable optimizations
 ```
 
 ## SurfaceView, TextureView, VideoView, MapFragment, GLSurfaceView, etc
@@ -72,6 +131,12 @@ Use Jitpack https://jitpack.io/#Dimezis/BlurView and release tags as the source 
 artifacts.
 ```Groovy
 implementation 'com.github.Dimezis:BlurView:version-3.1.0'
+```
+
+### Dependencies
+The enhanced features require the following additional dependency for dynamic color extraction:
+```Groovy
+implementation 'androidx.palette:palette:1.0.0'
 ```
 
 ## Rounded corners
@@ -91,7 +156,11 @@ Because blurring on other threads would introduce 1-2 frames of latency.
 On API 31+ the blur is done on the system Render Thread.
 
 ## Compared to other blurring libs
-- BlurView and Haze for Compose are the only libraries that leverage hardware acceleration for View snapshotting and have near zero overhead of snapshotting.
+- BlurView-Plus and Haze for Compose are the only libraries that leverage hardware acceleration for View snapshotting and have near zero overhead of snapshotting.
+- ✨ **NEW**: Windows-style dynamic background colors that adapt to content
+- ✨ **NEW**: iPhone-style smooth animations with physics-based transitions  
+- ✨ **NEW**: Advanced performance optimizations with intelligent caching
+- ✨ **NEW**: Real-time performance monitoring and adaptive quality scaling
 - Supports TextureView blur on API 31+.
 - The BlurView never invalidates itself or other Views in the hierarchy and updates only when needed.
 - It supports multiple BlurViews on the screen without triggering a draw loop.
