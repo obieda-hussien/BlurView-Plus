@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name="com.eightbitlab.blurview_sample.ChatActivity"
+            android:exported="false"
+            android:parentActivityName="com.eightbitlab.blurview_sample.MainActivity" />
     </application>
 
 </manifest>
